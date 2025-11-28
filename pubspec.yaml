@@ -1,5 +1,5 @@
 name: galaxy_sentinel
-description: "A new Flutter project."
+description: 'A new Flutter project.'
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.1.1+1
+version: 0.1.2+1
 
 environment:
   sdk: ^3.10.1
@@ -36,13 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Core Data
-  device_info_plus: ^10.0.1 
+  device_info_plus: ^10.0.1
   battery_plus: ^7.0.0
-  shared_preferences: ^2.2.3 
-  
+  shared_preferences: ^2.2.3
+
   # Visualization & Charts
-  fl_chart: ^0.68.0 
-  
+  fl_chart: ^0.68.0
+
   # Permission Handling (for runtime requests)
   permission_handler: ^11.1.0
 
@@ -62,7 +62,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
