@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - ...
 
+## [0.1.1] - 2025-11-28
+
+### Added
+
+- Device Info screen: lib/screens/device_info_screen.dart — exposes device model, OS and version using `device_info_plus`. Basic Android support implemented; other platforms to be expanded.
+
 ## [0.1.0] - 2025-11-28
 
 ### Added
