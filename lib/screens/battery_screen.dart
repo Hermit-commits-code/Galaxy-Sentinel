@@ -45,7 +45,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
                 children: [
                   Text(
                     'Battery level: $_level%',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
                   Text('State: ${_state?.name ?? 'unknown'}'),
