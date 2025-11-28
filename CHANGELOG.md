@@ -6,9 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- ...
+- Battery monitoring UI (WIP).
+- Unit tests for device info screen.
+- Platform detection improvements.
 
-## [0.1.1] - 2025-11-28
+## [0.1.2] - 2025-11-28
 
 ### Added
 
