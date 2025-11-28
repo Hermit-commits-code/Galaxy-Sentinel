@@ -6,9 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Platform detection improvements (planned).
+
+## [0.1.3] - 2025-11-28
+
+### Added
+
 - Battery monitoring UI (WIP): lib/screens/battery_screen.dart — basic battery level + state, chart placeholder.
 - Unit tests: test/screens/device_info_screen_test.dart — widget smoke test for Device Info screen.
-- Platform detection improvements (planned).
 
 ## [0.1.2] - 2025-11-28
 
