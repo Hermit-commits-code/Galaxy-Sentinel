@@ -9,7 +9,10 @@ void main() {
     // Expect a progress indicator while info loads
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    // Allow any async work to settle (the plugin may not return anything in test env)
-    await tester.pumpAndSettle();
+    // Allow a short amount of async work to run but avoid indefinite wait in CI
+    await tester.pump(const Duration(milliseconds: 250));
+
+    // basic scaffold presence check
+    expect(find.byType(Scaffold), findsOneWidget);
   });
 }
