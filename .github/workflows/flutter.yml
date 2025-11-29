@@ -9,9 +9,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Pin to a concrete SDK version to avoid "Unable to determine Flutter version" errors.
-          # Replace '3.10.6' with the version you use locally (run `flutter --version` to check).
-          flutter-version: '3.10.6'
+          # Pin to the exact Flutter SDK you use locally so the bundled Dart matches pubspec
+          flutter-version: '3.38.3'
 
       - name: Get dependencies
         run: flutter pub get
