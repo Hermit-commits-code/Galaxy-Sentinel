@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - Platform detection improvements (planned).
 
+## [0.1.7] - 2025-11-29
+
+### Added
+
+- Battery history: persisted readings + chart (fl_chart, shared_preferences).
+
 ## [0.1.6] - 2025-11-28
 
 ### Added
