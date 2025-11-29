@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - Platform detection improvements (planned).
 
+## [0.1.6] - 2025-11-28
+
+### Added
+
+- Release 0.1.6
+
 ## [0.1.5] - 2025-11-28
 
 ### Added
