@@ -11,7 +11,13 @@ class GalaxySentinelApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Galaxy Sentinel',
-      home: const Scaffold(body: Center(child: Text('Galaxy Sentinel'))),
+      theme: ThemeData(useMaterial3: true),
+      // Show the real HomeScreen so other screens are used via navigation
+      home: const HomeScreen(),
+      routes: {
+        '/battery': (ctx) => const BatteryScreen(),
+        '/device': (ctx) => const DeviceInfoScreen(),
+      },
     );
   }
 }
