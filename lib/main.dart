@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/device_info_screen.dart';
 import 'screens/battery_screen.dart';
-import 'screens/home_screen.dart';
 
 void main() => runApp(const GalaxySentinelApp());
 

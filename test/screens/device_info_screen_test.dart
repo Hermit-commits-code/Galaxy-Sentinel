@@ -6,10 +6,13 @@ void main() {
   testWidgets('DeviceInfoScreen builds and shows loader', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: DeviceInfoScreen()));
 
-    // Expect a progress indicator while info loads
+    // Expect an initial loader immediately
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    // Allow any async work to settle (the plugin may not return anything in test env)
-    await tester.pumpAndSettle();
+    // Allow a short time for async work; avoid indefinite pumpAndSettle
+    await tester.pump(const Duration(milliseconds: 250));
+
+    // Basic scaffold presence check
+    expect(find.byType(Scaffold), findsOneWidget);
   });
 }
