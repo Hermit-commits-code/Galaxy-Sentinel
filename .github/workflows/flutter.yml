@@ -5,9 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test --no-pub --coverage
+          # Pin to a concrete SDK version to avoid "Unable to determine Flutter version" errors.
+          # Replace '3.10.6' with the version you use locally (run `flutter --version` to check).
+          flutter-version: '3.10.6'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --no-pub --coverage
