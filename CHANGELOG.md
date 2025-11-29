@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - Platform detection improvements (planned).
 
+## [0.1.8] - 2025-11-29
+
+### Added
+
+- Permission flow: PermissionService using permission_handler.
+
 ## [0.1.7] - 2025-11-29
 
 ### Added
