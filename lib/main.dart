@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/device_info_screen.dart';
 import 'screens/battery_screen.dart';
+import 'screens/device_info_screen.dart';
 
 void main() => runApp(const GalaxySentinelApp());
 
@@ -11,12 +11,12 @@ class GalaxySentinelApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Galaxy Sentinel',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/',
+      theme: ThemeData(useMaterial3: true),
+      // Show the real HomeScreen so other screens are used via navigation
+      home: const HomeScreen(),
       routes: {
-        '/': (_) => const HomeScreen(),
-        '/device-info': (_) => const DeviceInfoScreen(),
-        '/battery': (_) => const BatteryScreen(),
+        '/battery': (ctx) => const BatteryScreen(),
+        '/device': (ctx) => const DeviceInfoScreen(),
       },
     );
   }

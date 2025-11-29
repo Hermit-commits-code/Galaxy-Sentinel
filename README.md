@@ -1,16 +1,20 @@
 # galaxy_sentinel
 
-A new Flutter project.
+A Flutter app for monitoring device metrics.
 
-## Getting Started
+Quick start
 
-This project is a starting point for a Flutter application.
+1. flutter pub get
+2. flutter run
 
-A few resources to get you started if this is your first Flutter project:
+Screens
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Home — navigation to Device Info and Battery
+- Device Info — device model, OS, version
+- Battery — current battery level & state
+- Battery History — chart and persisted readings (WIP)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Contributing
+
+- Use Conventional Commits
+- Update CHANGELOG.md Unreleased entries in feature PRs

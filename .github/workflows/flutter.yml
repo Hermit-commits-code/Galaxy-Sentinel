@@ -1,0 +1,22 @@
+name: Flutter CI
+on: [push, pull_request]
+jobs:
+  analyze-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          # Pin to the exact Flutter SDK you use locally so the bundled Dart matches pubspec
+          flutter-version: '3.38.3'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --no-pub --coverage
