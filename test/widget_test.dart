@@ -14,7 +14,8 @@ void main() {
     await tester.pumpWidget(const GalaxySentinelApp());
     await tester.pumpAndSettle();
 
-    // resilient smoke check
+    // resilient smoke check: app shell exists
     expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.byType(Scaffold), findsOneWidget);
   });
 }
