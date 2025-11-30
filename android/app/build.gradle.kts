@@ -37,6 +37,25 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // Add a simple flavor dimension to allow a Samsung-specific APK that
+    // contains vendor-specific native hooks. The `samsung` flavor will
+    // include the native metric implementation; the `generic` flavor ships a
+    // minimal MainActivity without vendor sensors.
+    flavorDimensions += "vendor"
+    productFlavors {
+        create("samsung") {
+            dimension = "vendor"
+        }
+        create("generic") {
+            dimension = "vendor"
+        }
+    }
+
+    // Add WorkManager runtime for background sampling in the Samsung flavor.
+    dependencies {
+        implementation("androidx.work:work-runtime-ktx:2.8.1")
+    }
 }
 
 flutter {

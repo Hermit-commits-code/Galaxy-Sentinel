@@ -6,7 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Platform detection improvements (planned).
+- (none yet)
+
+## [0.2.0] - 2025-11-30
+
+### Added
+
+- Core data streams: `SystemSnapshot`, `PerformanceService`, and `DataStreamManager` — periodic sampling and streaming of system metrics.
+- Dart `<->` native wiring improvements: `SystemDataChannel` (MethodChannel wrapper) tested and used by data streams.
+- Tests: Added unit tests for `PerformanceService` and `DataStreamManager` with mocked platform channels and `SharedPreferences`.
+- Misc: CI-friendly test fixes and refactors (binding initialization, updated binary messenger mocks).
 
 ## [0.1.9] - 2025-11-29
 

@@ -81,6 +81,20 @@ flutter analyze
 flutter test --reporter expanded
 ```
 
+## Building Samsung flavor (local)
+
+If you need to build the Samsung-targeted flavor (contains vendor telemetry
+worker), run:
+
+```bash
+flutter build appbundle --flavor samsung -t lib/main.dart --release
+# or for a quick APK
+flutter build apk --flavor samsung -t lib/main.dart --release
+```
+
+The CI creates a PR artifact for the `samsung` flavor when the branch is
+`feat/data-streams`. See `.github/workflows/build_samsung.yml` for details.
+
 - Tests include unit tests for services and widget tests for UI components. Use `SharedPreferences.setMockInitialValues()` for prefs tests.
 
 ## Releases

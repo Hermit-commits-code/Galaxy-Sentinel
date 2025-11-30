@@ -1,0 +1,15 @@
+# CODEOWNERS file: require review from repository owner for important paths
+# Format: <pattern> <owner>
+
+# Native/android code
+/android/ @Hermit-commits-code
+
+# Dart services and core logic
+/lib/services/ @Hermit-commits-code
+
+# Pubspec and changelog
+/pubspec.yaml @Hermit-commits-code
+/CHANGELOG.md @Hermit-commits-code
+
+# CI workflows
+.github/workflows/ @Hermit-commits-code
