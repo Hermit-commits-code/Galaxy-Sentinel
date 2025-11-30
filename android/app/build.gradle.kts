@@ -63,7 +63,6 @@ android {
             }
         }
     }
-
     // Add a simple flavor dimension to allow a Samsung-specific APK that
     // contains vendor-specific native hooks. The `samsung` flavor will
     // include the native metric implementation; the `generic` flavor ships a

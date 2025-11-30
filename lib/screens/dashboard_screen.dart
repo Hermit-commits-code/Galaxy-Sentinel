@@ -71,7 +71,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
   Future<void> _exportHistory() async {
     final hist = await SystemDataChannel.fetchNativeHistory();
     if (hist == null || hist.isEmpty) {
@@ -170,16 +169,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 final ts = e['timestamp'];
                                 final cpu = e['cpuTempC'];
                                 final when = ts is int
-                                    ? DateTime.fromMillisecondsSinceEpoch(
-                                        ts,
-                                      ).toIso8601String()
+                                    ? DateTime.fromMillisecondsSinceEpoch(ts).toIso8601String()
                                     : ts?.toString() ?? 'n/a';
                                 return ListTile(
                                   dense: true,
                                   title: Text('ts: $when'),
-                                  subtitle: Text(
-                                    'cpuTempC: ${cpu?.toString() ?? 'n/a'}',
-                                  ),
+                                  subtitle: Text('cpuTempC: ${cpu?.toString() ?? 'n/a'}'),
                                 );
                               }),
                             ],
