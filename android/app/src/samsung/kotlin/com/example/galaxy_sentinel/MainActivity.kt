@@ -8,6 +8,10 @@ import android.os.StatFs
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 import java.io.RandomAccessFile
 
 /**
@@ -43,6 +47,17 @@ class MainActivity: FlutterActivity() {
             }
         }
     }
+
+        // Schedule periodic WorkManager job for telemetry sampling.
+        private fun scheduleTelemetry() {
+            val workRequest = PeriodicWorkRequestBuilder<TelemetryWorker>(15, TimeUnit.MINUTES).build()
+            WorkManager.getInstance(applicationContext)
+                .enqueueUniquePeriodicWork("telemetry_worker", ExistingPeriodicWorkPolicy.REPLACE, workRequest)
+        }
+
+        private fun cancelTelemetry() {
+            WorkManager.getInstance(applicationContext).cancelUniqueWork("telemetry_worker")
+        }
 
     private fun getCpuTempCelsius(): Double? {
         val candidates = listOf(

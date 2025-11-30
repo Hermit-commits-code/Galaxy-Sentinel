@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'screens/battery_screen.dart';
 import 'screens/device_info_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/dashboard_screen.dart';
+import 'services/app_services.dart';
 
-void main() => runApp(const GalaxySentinelApp());
+Future<void> main() async {
+  // Initialize services (consent, datastream manager) before running the app.
+  await AppServices.init();
+  runApp(const GalaxySentinelApp());
+}
 
 class GalaxySentinelApp extends StatelessWidget {
   const GalaxySentinelApp({super.key});
@@ -12,11 +19,12 @@ class GalaxySentinelApp extends StatelessWidget {
     return MaterialApp(
       title: 'Galaxy Sentinel',
       theme: ThemeData(useMaterial3: true),
-      // Show the real HomeScreen so other screens are used via navigation
       home: const HomeScreen(),
       routes: {
         '/battery': (ctx) => const BatteryScreen(),
         '/device': (ctx) => const DeviceInfoScreen(),
+        '/settings': (ctx) => const SettingsScreen(),
+        '/dashboard': (ctx) => const DashboardScreen(),
       },
     );
   }
@@ -43,7 +51,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Home Page'),
+        title: const Text('Galaxy Sentinel'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.dashboard),
+            onPressed: () => Navigator.of(context).pushNamed('/dashboard'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).pushNamed('/settings'),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -52,7 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Text('You have pushed the button this many times: $_counter'),
             ElevatedButton(
               onPressed: _incrementCounter,
-              child: Text('Increment'),
+              child: const Text('Increment'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pushNamed('/dashboard'),
+              child: const Text('Open Dashboard'),
             ),
           ],
         ),

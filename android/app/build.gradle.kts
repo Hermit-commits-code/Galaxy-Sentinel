@@ -51,6 +51,11 @@ android {
             dimension = "vendor"
         }
     }
+
+    // Add WorkManager runtime for background sampling in the Samsung flavor.
+    dependencies {
+        implementation("androidx.work:work-runtime-ktx:2.8.1")
+    }
 }
 
 flutter {

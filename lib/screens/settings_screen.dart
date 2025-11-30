@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/consent_service.dart';
+import 'package:flutter/services.dart';
 
 /// SettingsScreen provides a minimal UI for telemetry consent and privacy
 /// disclosure. It's intentionally small and documented so you can expand it.
@@ -37,6 +38,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _enabled = value;
       _loading = false;
     });
+    // If enabling, start sampling in-process and request native background
+    // scheduling (Samsung flavor) — ignore errors for non-Samsung builds.
+    if (value) {
+      try {
+        // Start the in-app DataStreamManager if available (AppServices).
+        // Also request the native scheduler to run periodic work.
+        // We call via MethodChannel to avoid introducing a new plugin.
+        const MethodChannel(
+          'com.galaxysentinel.data',
+        ).invokeMethod('scheduleTelemetry');
+      } catch (_) {
+        // ignore: no-op on non-Samsung or missing implementation
+      }
+    } else {
+      try {
+        const MethodChannel(
+          'com.galaxysentinel.data',
+        ).invokeMethod('cancelTelemetry');
+      } catch (_) {
+        // ignore
+      }
+    }
   }
 
   @override
