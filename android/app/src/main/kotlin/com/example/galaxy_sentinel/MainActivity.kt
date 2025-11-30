@@ -29,6 +29,22 @@ class MainActivity: FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+            // Only expose these device-specific metrics on Samsung devices.
+            // The app will be distributed on Samsung Galaxy Store and should
+            // avoid exposing vendor-specific sensors on non-Samsung hardware.
+            val manufacturer = (android.os.Build.MANUFACTURER ?: "").lowercase()
+            val isSamsung = manufacturer.contains("samsung")
+
+            if (!isSamsung) {
+                // For non-Samsung devices return null for all supported methods.
+                when (call.method) {
+                    "getCpuTemp", "getMemoryInfo", "getDiskInfo", "getCpuUsage" -> {
+                        result.success(null)
+                        return@setMethodCallHandler
+                    }
+                }
+            }
+
             when (call.method) {
                 "getCpuTemp" -> {
                     val t = getCpuTempCelsius()
