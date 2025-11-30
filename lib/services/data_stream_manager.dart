@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../models/system_snapshot.dart';
 import 'performance_service.dart';
 import 'system_data_channel.dart';
+import 'consent_service.dart';
 
 class DataStreamManager {
   final PerformanceService _perf;
@@ -14,15 +15,22 @@ class DataStreamManager {
   DataStreamManager({
     PerformanceService? performanceService,
     Duration interval = const Duration(seconds: 3),
-  })  : _perf = performanceService ?? const PerformanceService(),
-        _interval = interval,
-        _controller = StreamController<SystemSnapshot>.broadcast();
+    ConsentService? consentService,
+  }) : _perf = performanceService ?? const PerformanceService(),
+       _interval = interval,
+       _controller = StreamController<SystemSnapshot>.broadcast(),
+       _consent = consentService;
+
+  final ConsentService? _consent;
 
   Stream<SystemSnapshot> get stream => _controller.stream;
 
   /// Start periodic sampling.
   void start() {
     if (_timer != null) return;
+    // Respect user consent: if a consent service is provided and the user has
+    // not enabled telemetry, do not start sampling.
+    if (_consent != null && !_consent.isTelemetryEnabled()) return;
     _emitSample(); // initial immediate sample
     _timer = Timer.periodic(_interval, (_) => _emitSample());
   }
