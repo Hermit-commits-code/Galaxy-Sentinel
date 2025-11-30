@@ -9,6 +9,7 @@ import android.os.Environment
 import android.os.StatFs
 import java.io.RandomAccessFile
 import org.json.JSONObject
+import org.json.JSONArray
 
 /**
  * TelemetryWorker runs on the native side and performs the same sampling we
@@ -22,6 +23,28 @@ class TelemetryWorker(context: Context, params: WorkerParameters) : Worker(conte
             val snapshot = sampleSnapshot()
             if (snapshot != null) {
                 prefs.edit().putString("telemetry.latest", snapshot.toString()).apply()
+
+                // Append to a rolling history stored as a JSON array in SharedPreferences.
+                // Keep a bounded history to avoid unbounded storage growth.
+                try {
+                    val historyKey = "telemetry.history"
+                    val existing = prefs.getString(historyKey, null)
+                    val newHistory = JSONArray()
+                    // add newest first
+                    newHistory.put(snapshot)
+                    if (existing != null) {
+                        val old = JSONArray(existing)
+                        var idx = 0
+                        val maxEntries = 288 // ~one entry per 5 min for one day
+                        while (idx < old.length() && newHistory.length() < maxEntries) {
+                            newHistory.put(old.get(idx))
+                            idx += 1
+                        }
+                    }
+                    prefs.edit().putString(historyKey, newHistory.toString()).apply()
+                } catch (e: Exception) {
+                    // ignore history failures
+                }
             }
             return Result.success()
         } catch (e: Exception) {

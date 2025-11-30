@@ -10,17 +10,17 @@ void main() {
     // platform-specific methods — the service should tolerate that.
     final channel = MethodChannel('com.galaxysentinel.data');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(channel, (call) async {
-      switch (call.method) {
-        case 'getMemoryInfo':
-        case 'getDiskInfo':
-        case 'getCpuUsage':
-        case 'getCpuTemp':
-          return null;
-        default:
-          return null;
-      }
-    });
+        .setMockMethodCallHandler(channel, (call) async {
+          switch (call.method) {
+            case 'getMemoryInfo':
+            case 'getDiskInfo':
+            case 'getCpuUsage':
+            case 'getCpuTemp':
+              return null;
+            default:
+              return null;
+          }
+        });
 
     final svc = const PerformanceService();
     final m = await svc.sample();

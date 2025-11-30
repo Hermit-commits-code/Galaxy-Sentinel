@@ -1,0 +1,49 @@
+name: Build Samsung Flavor
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - feat/data-streams
+
+jobs:
+  build-samsung:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test --reporter expanded
+
+      - name: Build Samsung AAB
+        run: |
+          flutter build appbundle --flavor samsung -t lib/main.dart --release
+
+      - name: Build Samsung APK (optional)
+        run: |
+          flutter build apk --flavor samsung -t lib/main.dart --release || true
+
+      - name: Upload built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: samsung-build-artifacts
+          path: |
+            build/app/outputs/bundle/**
+            build/app/outputs/apk/**

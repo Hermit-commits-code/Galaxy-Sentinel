@@ -43,6 +43,41 @@ class MainActivity: FlutterActivity() {
                     val usage = getCpuUsagePercent()
                     result.success(usage)
                 }
+                "scheduleTelemetry" -> {
+                    try {
+                        scheduleTelemetry()
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("schedule_error", e.message, null)
+                    }
+                }
+                "cancelTelemetry" -> {
+                    try {
+                        cancelTelemetry()
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("cancel_error", e.message, null)
+                    }
+                }
+                "getLatestSnapshot" -> {
+                    try {
+                        val prefs = applicationContext.getSharedPreferences("galaxysentinel", Context.MODE_PRIVATE)
+                        val json = prefs.getString("telemetry.latest", null)
+                        // Return JSON string (null if missing). Dart will decode.
+                        result.success(json)
+                    } catch (e: Exception) {
+                        result.error("read_error", e.message, null)
+                    }
+                }
+                "getTelemetryHistory" -> {
+                    try {
+                        val prefs = applicationContext.getSharedPreferences("galaxysentinel", Context.MODE_PRIVATE)
+                        val json = prefs.getString("telemetry.history", null)
+                        result.success(json)
+                    } catch (e: Exception) {
+                        result.error("read_error", e.message, null)
+                    }
+                }
                 else -> result.notImplemented()
             }
         }

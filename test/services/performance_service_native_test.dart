@@ -17,17 +17,17 @@ void main() {
     // Provide a mock platform implementation for the three methods we use.
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getMemoryInfo':
-          return {'totalBytes': 8000000, 'availableBytes': 3000000};
-        case 'getDiskInfo':
-          return {'totalBytes': 16000000000, 'availableBytes': 4000000000};
-        case 'getCpuUsage':
-          return 0.12; // 12%
-        default:
-          return null;
-      }
-    });
+          switch (methodCall.method) {
+            case 'getMemoryInfo':
+              return {'totalBytes': 8000000, 'availableBytes': 3000000};
+            case 'getDiskInfo':
+              return {'totalBytes': 16000000000, 'availableBytes': 4000000000};
+            case 'getCpuUsage':
+              return 0.12; // 12%
+            default:
+              return null;
+          }
+        });
 
     final svc = PerformanceService();
     final ram = await svc.getFreeRamBytes();

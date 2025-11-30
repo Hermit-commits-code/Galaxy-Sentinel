@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 import '../services/app_services.dart';
 import '../models/system_snapshot.dart';
+import '../services/system_data_channel.dart';
+import 'package:flutter/services.dart';
 
 /// DashboardScreen subscribes to the DataStreamManager stream and shows the
 /// latest snapshot. It's a compact view useful for QA and local testing.
@@ -33,6 +36,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.dispose();
   }
 
+  Future<void> _exportHistory() async {
+    final hist = await SystemDataChannel.fetchNativeHistory();
+    if (hist == null || hist.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No telemetry history to export')),
+      );
+      return;
+    }
+    try {
+      final jsonStr = json.encode(hist);
+      await Clipboard.setData(ClipboardData(text: jsonStr));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Copied ${hist.length} entries to clipboard')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to export: ${e.toString()}')),
+      );
+    }
+  }
+
   Widget _row(String label, String value) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: Row(
@@ -46,6 +73,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final s = _latest;
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _exportHistory,
+        label: const Text('Export history'),
+        icon: const Icon(Icons.upload_file),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: s == null
@@ -61,11 +93,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   _row(
                     'CPU Usage',
                     s.cpuUsage != null
-                        ? (s.cpuUsage! * 100).toStringAsFixed(1) + '%'
+                        ? '${(s.cpuUsage! * 100).toStringAsFixed(1)}%'
                         : 'n/a',
                   ),
                   _row('RAM free', s.ramFreeBytes?.toString() ?? 'n/a'),
                   _row('Disk free', s.diskFreeBytes?.toString() ?? 'n/a'),
+                  const SizedBox(height: 12),
+                  ExpansionTile(
+                    title: const Text(
+                      'Native telemetry history (latest first)',
+                    ),
+                    children: [
+                      FutureBuilder<List<Map<String, dynamic>>?>(
+                        future: SystemDataChannel.fetchNativeHistory(),
+                        builder: (context, snap) {
+                          if (snap.connectionState != ConnectionState.done) {
+                            return const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          final list = snap.data;
+                          if (list == null || list.isEmpty) {
+                            return const ListTile(
+                              title: Text('No history available'),
+                            );
+                          }
+                          // show up to 10 entries
+                          final show = list.take(10).toList();
+                          return Column(
+                            children: show.map((e) {
+                              final ts = e['timestamp'];
+                              final cpu = e['cpuTempC'];
+                              final when = ts is int
+                                  ? DateTime.fromMillisecondsSinceEpoch(
+                                      ts,
+                                    ).toIso8601String()
+                                  : ts?.toString() ?? 'n/a';
+                              return ListTile(
+                                dense: true,
+                                title: Text('ts: $when'),
+                                subtitle: Text(
+                                  'cpuTempC: ${cpu?.toString() ?? 'n/a'}',
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
       ),
