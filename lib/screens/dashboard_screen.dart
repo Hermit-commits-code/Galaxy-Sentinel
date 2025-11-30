@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 import '../services/app_services.dart';
 import '../models/system_snapshot.dart';
 import '../services/system_data_channel.dart';
@@ -34,6 +35,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void dispose() {
     _sub?.cancel();
     super.dispose();
+  }
+
+  Widget _buildCpuTempChart(List<Map<String, dynamic>> history) {
+    final spots = <FlSpot>[];
+    for (var i = 0; i < history.length; i++) {
+      final e = history.elementAt(i);
+      final cpu = e['cpuTempC'];
+      final y = (cpu is num) ? cpu.toDouble() : double.nan;
+      if (!y.isNaN) spots.add(FlSpot(i.toDouble(), y));
+    }
+    if (spots.isEmpty) return const Center(child: Text('No chart data'));
+
+    final minY = spots.map((s) => s.y).reduce((a, b) => a < b ? a : b);
+    final maxY = spots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
+
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: true),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        minY: minY - 2,
+        maxY: maxY + 2,
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            dotData: FlDotData(show: false),
+            color: Colors.red,
+            belowBarData: BarAreaData(show: false),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _exportHistory() async {
@@ -119,25 +155,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               title: Text('No history available'),
                             );
                           }
-                          // show up to 10 entries
-                          final show = list.take(10).toList();
+                          // show up to 50 entries
+                          final show = list.take(50).toList();
                           return Column(
-                            children: show.map((e) {
-                              final ts = e['timestamp'];
-                              final cpu = e['cpuTempC'];
-                              final when = ts is int
-                                  ? DateTime.fromMillisecondsSinceEpoch(
-                                      ts,
-                                    ).toIso8601String()
-                                  : ts?.toString() ?? 'n/a';
-                              return ListTile(
-                                dense: true,
-                                title: Text('ts: $when'),
-                                subtitle: Text(
-                                  'cpuTempC: ${cpu?.toString() ?? 'n/a'}',
+                            children: [
+                              SizedBox(
+                                height: 160,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _buildCpuTempChart(show),
                                 ),
-                              );
-                            }).toList(),
+                              ),
+                              ...show.map((e) {
+                                final ts = e['timestamp'];
+                                final cpu = e['cpuTempC'];
+                                final when = ts is int
+                                    ? DateTime.fromMillisecondsSinceEpoch(
+                                        ts,
+                                      ).toIso8601String()
+                                    : ts?.toString() ?? 'n/a';
+                                return ListTile(
+                                  dense: true,
+                                  title: Text('ts: $when'),
+                                  subtitle: Text(
+                                    'cpuTempC: ${cpu?.toString() ?? 'n/a'}',
+                                  ),
+                                );
+                              }),
+                            ],
                           );
                         },
                       ),
